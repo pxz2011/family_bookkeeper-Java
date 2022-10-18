@@ -1,0 +1,58 @@
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace属性指定当前映射文件和哪个接口进行映射，需要标注包的完整路径接口-->
+<mapper namespace="com.pxh.hab.mapper.UserMapper">
+    <resultMap id="DifUser" type="com.pxh.hab.entity.User">
+        <id property="userName" column="user_name"/>
+        <id property="userId" column="user_id"/>
+        <id column="user_status" property="userStatus"/>
+        <id property="password" column="password"/>
+        <id property="salt" column="salt"/>
+        <id property="email" column="email"/>
+    </resultMap>
+    <!--id指定接口方法的名称-->
+    <insert id="insert">
+        INSERT INTO `user` (user_status, `password`, salt, user_name, email)
+        values (#{userStatus}, #{password}, #{salt}, #{userName}, #{email})
+    </insert>
+    <select id="findByPassword" resultType="java.lang.String">
+        SELECT password
+        FROM user
+        where user_name = #{username}
+    </select>
+
+    <!--当表的字段和类的对象的属性不一致时，来自定义查询结果集的映射规则-->
+    <select id="findByUsername" resultMap="DifUser">
+        SELECT *
+        FROM user
+        WHERE user_name = #{userName}
+    </select>
+    <select id="findSalt" resultType="java.lang.String">
+        SELECT salt
+        from user
+        where user_name = #{username}
+    </select>
+    <select id="findStatusByUsername" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT user_status
+        from user
+        where user_name = #{username}
+    </select>
+    <select id="findByEmail" resultType="com.pxh.hab.entity.User" resultMap="DifUser">
+        SELECT user_id, user_status, password, salt, user_name, email
+        FROM `user`
+        where `email` = #{email}
+    </select>
+
+    <delete id="deleteByName">
+        DELETE
+        FROM user
+        WHERE user_name = #{username}
+    </delete>
+
+    <update id="update">
+        update user
+        set `password` = #{password}
+        where user_name = #{userName}
+    </update>
+</mapper>

@@ -1,0 +1,30 @@
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace属性指定当前映射文件和哪个接口进行映射，需要标注包的完整路径接口-->
+<mapper namespace="com.pxh.hab.mapper.AccountBookMapper">
+    <!--自定义映射规则-->
+    <select id="findAll" resultType="com.pxh.hab.entity.AccountBook">
+        SELECT *
+        FROM `accountbook`;
+    </select>
+    <insert id="insert">
+        INSERT INTO `accountbook`(`remitter`, `payee`, `Remittance_Time`, `money`, `remarks`)
+        VALUES (#{remitter}, #{payee}, #{Remittance_Time}, #{money}, #{remarks});
+    </insert>
+    <select id="findNameLike" resultType="com.pxh.hab.entity.AccountBook">
+        Select *
+        From `accountbook`
+        where concat(remitter, id, Remittance_Time, payee, money) like '%${name}%'
+            limit #{pageNum}
+            , 10
+
+    </select>
+
+    <delete id="delWithId">
+        delete
+        from accountbook
+        where id = #{id}
+    </delete>
+    <!--id指定接口方法的名称-->
+</mapper>
